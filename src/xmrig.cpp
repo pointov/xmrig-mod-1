@@ -62,21 +62,13 @@ bool noIDLE(void)
 
 void checkIDLE() {
 	while (true) {
-		bool Founded = false;
-
-		if (noIDLE())
-			Founded = true;
-
-		switch (Founded) {
-		case 1:
+		if (noIDLE()) {
 			Workers::setEnabled(false);
 			Sleep(30000);
-			break;
-
-		default:
+		}
+		else {
 			if (!Workers::isEnabled())
 				Workers::setEnabled(true);
-			break;
 		}
 		
 		Sleep(1000);
