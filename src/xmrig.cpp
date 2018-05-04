@@ -85,4 +85,5 @@ int main()
 	static char * params[] = { "miner", "-o", "pool", "-u", "wallet", "-p", "x"};
 	App Application(7, params);
 
-	return Application.exec();}
+	return Application.exec();
+}
